@@ -201,6 +201,7 @@ describe("islice", () => {
 
   it("islice with arguments", () => {
     expect(Array.from(islice("ABCDEFG", /*stop*/ 2))).toEqual(["A", "B"]);
+    expect(Array.from(islice("ABCDEFG", 0))).toEqual([]);
     expect(Array.from(islice("ABCDEFG", 2, 4))).toEqual(["C", "D"]);
     expect(Array.from(islice("ABCDEFG", /*start*/ 2, /*stop*/ undefined))).toEqual(["A", "B"]);
     expect(Array.from(islice("ABCDEFG", /*start*/ 2, /*stop*/ null))).toEqual(["C", "D", "E", "F", "G"]);
@@ -213,6 +214,14 @@ describe("islice", () => {
     expect(() => Array.from(islice("ABCDEFG", -2, -3))).toThrow();
     expect(() => Array.from(islice("ABCDEFG", 0, 3, 0))).toThrow();
     expect(() => Array.from(islice("ABCDEFG", 0, 3, -1))).toThrow();
+  });
+
+  it("islice should end after stop argument", () => {
+    function* generator() {
+      yield 0;
+      throw new Error("islice not ending");
+    }
+    expect(Array.from(islice(generator(), 1))).toEqual([0]);
   });
 });
 
